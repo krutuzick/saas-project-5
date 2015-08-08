@@ -30,16 +30,21 @@ Vagrant.configure(2) do |config|
 #            owner: "vagrant", 
 #            group: "vagrant",
 #            mount_options: [ "dmode=775,fmode=764" ]
-        pj5_config.vm.synced_folder ".", "/home/vagrant/public_html", type: "rsync", rsync__exclude: [ ".git/", ".gitignore", "Vagrantfile", "env/box" ], rsync__args: ["--verbose", "--archive", "-z"]
+        pj5_config.vm.synced_folder ".", "/home/vagrant/public_html", type: "rsync", rsync__exclude: [ ".git/", "env/box" ], rsync__args: ["--verbose", "--archive", "-z"]
     end
     
     # provisioning configuration
-#     config.vm.provision "puppet", run: "always" do |puppet|
-#         puppet.manifests_path = "env/puppet/manifests"
-#         puppet.module_path = "env/puppet/modules"
-#         puppet.manifest_file = "singlenode.pp"
-#         puppet.hiera_config_path = "env/puppet/extra/hiera.yaml"
-#     end
+    config.vm.provision "puppet", run: "always" do |puppet|
+        puppet.facter = {
+            "facter_system_user"  => "vagrant",
+            "facter_project_path" => "/home/vagrant/public_html"
+            "facter_machine_ip"   => "192.168.54.100"
+        }
+        puppet.options = "--verbose --debug"
+        puppet.environment_path = "env/puppet/environments"
+        puppet.environment = "dev"
+#         puppet.hiera_config_path = "env/puppet/hiera.yaml"
+    end
     
     $shell_provision = <<SCRIPT
 # TODO: composer install -n
