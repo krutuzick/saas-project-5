@@ -26,6 +26,7 @@ Vagrant.configure(2) do |config|
             v.memory = 1024
             v.cpus = 2
             v.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
+            v.customize ["setextradata", :id, "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled", 1]
         end
 
         # disable ssh key regeneration for development
@@ -42,16 +43,21 @@ Vagrant.configure(2) do |config|
     end
 
     # provisioning configuration
+    date_now = Time.new
+    config.vm.provision "shell", name: "Shell_SetTimezone", inline: "sudo timedatectl set-timezone Europe/Moscow"
+    config.vm.provision "shell", name: "Shell_SetDateTime", inline: "sudo date --set=\"" + date_now.strftime('%-d %^b %Y %H:%M:%S') + "\""
+
     config.vm.provision "puppet", run: "always" do |puppet|
         puppet.facter = {
             "facter_system_user"  => "vagrant",
             "facter_project_path" => "/home/vagrant/public_html",
             "facter_machine_ip"   => "192.168.54.100"
         }
-        puppet.options = "--verbose --debug"
+#         puppet.options = "--verbose --debug"
         puppet.environment_path = "env/puppet/environments"
         puppet.environment = "dev"
-#         puppet.hiera_config_path = "env/puppet/hiera.yaml"
+        puppet.working_directory = "/home/vagrant/public_html"
+        puppet.hiera_config_path = "env/puppet/hiera.yaml"
     end
 
 end

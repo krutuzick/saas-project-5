@@ -1,0 +1,6 @@
+---
+php::ensure: '5.6'
+php::phpunit: true
+php::fpm_user: 'vagrant'
+php::fpm_group: 'vagrant'
+php::manage_repos: true
