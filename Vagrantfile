@@ -33,7 +33,7 @@ Vagrant.configure(2) do |config|
         pj5_config.ssh.insert_key = false
 
         # synced folders configuration
-        # VirtualBox default sharing - through vboxsf filesystem. Unfortunately, it is not supporting harlinks and have problems with taring symlinks.
+        # VirtualBox default sharing - through vboxsf filesystem. Unfortunately, it is not supporting hardlinks and have problems with taring symlinks.
         # So, folders sharing is implemented with rsync (which is less convinient... but it is far more fast, which is nice)
 #         pj5_config.vm.synced_folder ".", "/var/www/vagrant",
 #            owner: "vagrant", 
@@ -50,22 +50,5 @@ Vagrant.configure(2) do |config|
     config.vm.provision "startup", type: "shell", run: "always" do |s2|
         s2.path = "env/startup.sh"
     end
-#     date_now = Time.new
-#     config.vm.provision "shell", name: "Shell_SetTimezone", inline: "sudo timedatectl set-timezone Europe/Moscow"
-#     config.vm.provision "shell", name: "Shell_SetDateTime", inline: "sudo date --set=\"" + date_now.strftime('%-d %^b %Y %H:%M:%S') + "\""
-    
-
-#     config.vm.provision "puppet", run: "always" do |puppet|
-#         puppet.facter = {
-#             "facter_system_user"  => "vagrant",
-#             "facter_project_path" => "/var/www/vagrant",
-#             "facter_machine_ip"   => "192.168.54.100"
-#         }
-#         puppet.options = "--verbose --debug"
-#         puppet.environment_path = "env/puppet/environments"
-#         puppet.environment = "dev"
-#         puppet.working_directory = "/var/www/vagrant"
-#         puppet.hiera_config_path = "env/puppet/hiera.yaml"
-#     end
 
 end

@@ -1,8 +1,0 @@
----
-:backends:
-  - yaml
-:yaml:
-  :datadir: "env/puppet/environments/%{::environment}/hieradata"
-:hierarchy:
-  - "node/%{::fqdn}"
-  - common
